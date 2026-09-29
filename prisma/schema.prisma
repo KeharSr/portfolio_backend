@@ -1,0 +1,254 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Auth ----------
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// ---------- Profile (single row: hero / about) ----------
+
+model Profile {
+  id          String   @id @default(uuid())
+  fullName    String
+  headline    String?
+  tagline     String?
+  bio         String?  @db.Text
+  about       String?  @db.Text
+  avatarUrl   String?
+  coverUrl    String?
+  resumeUrl   String?
+  email       String?
+  phone       String?
+  location    String?
+  website     String?
+  yearsOfExp  Int?
+  isAvailable Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("profiles")
+}
+
+// ---------- Site-wide texts / settings (key -> JSON value) ----------
+
+model SiteSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       Json
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// ---------- Typed portfolio sections ----------
+
+model SocialLink {
+  id        String   @id @default(uuid())
+  platform  String
+  url       String
+  icon      String?
+  order     Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("social_links")
+}
+
+model Skill {
+  id          String   @id @default(uuid())
+  name        String
+  category    String?
+  level       Int?     // 0 - 100
+  icon        String?
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("skills")
+}
+
+model Experience {
+  id           String    @id @default(uuid())
+  company      String
+  role         String
+  location     String?
+  employment   String?   // Full-time, Freelance, Internship...
+  startDate    DateTime
+  endDate      DateTime?
+  isCurrent    Boolean   @default(false)
+  description  String?   @db.Text
+  highlights   String[]  @default([])
+  technologies String[]  @default([])
+  companyUrl   String?
+  logoUrl      String?
+  order        Int       @default(0)
+  isVisible    Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("experiences")
+}
+
+model Education {
+  id           String    @id @default(uuid())
+  institution  String
+  degree       String
+  fieldOfStudy String?
+  location     String?
+  grade        String?
+  startDate    DateTime
+  endDate      DateTime?
+  isCurrent    Boolean   @default(false)
+  description  String?   @db.Text
+  logoUrl      String?
+  order        Int       @default(0)
+  isVisible    Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("educations")
+}
+
+model Project {
+  id           String    @id @default(uuid())
+  title        String
+  slug         String    @unique
+  summary      String?
+  description  String?   @db.Text
+  imageUrl     String?
+  gallery      String[]  @default([])
+  technologies String[]  @default([])
+  liveUrl      String?
+  repoUrl      String?
+  category     String?
+  isFeatured   Boolean   @default(false)
+  startDate    DateTime?
+  endDate      DateTime?
+  order        Int       @default(0)
+  isVisible    Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("projects")
+}
+
+model Certification {
+  id            String    @id @default(uuid())
+  name          String
+  issuer        String
+  issueDate     DateTime?
+  expiryDate    DateTime?
+  credentialId  String?
+  credentialUrl String?
+  imageUrl      String?
+  order         Int       @default(0)
+  isVisible     Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("certifications")
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  title       String
+  description String?  @db.Text
+  icon        String?
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("services")
+}
+
+model Testimonial {
+  id        String   @id @default(uuid())
+  name      String
+  role      String?
+  company   String?
+  message   String   @db.Text
+  avatarUrl String?
+  rating    Int?     // 1 - 5
+  order     Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+// ---------- Fully dynamic custom sections ----------
+// Use these for anything not covered above (e.g. "Achievements", "Blog", "Hobbies").
+
+model Section {
+  id        String        @id @default(uuid())
+  slug      String        @unique
+  title     String
+  subtitle  String?
+  content   String?       @db.Text
+  type      String        @default("list") // free-form hint for the frontend: text | list | grid | timeline ...
+  data      Json?
+  order     Int           @default(0)
+  isVisible Boolean       @default(true)
+  items     SectionItem[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("sections")
+}
+
+model SectionItem {
+  id          String   @id @default(uuid())
+  sectionId   String
+  section     Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  title       String
+  subtitle    String?
+  description String?  @db.Text
+  imageUrl    String?
+  link        String?
+  icon        String?
+  date        DateTime?
+  tags        String[] @default([])
+  data        Json?
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sectionId])
+  @@map("section_items")
+}
+
+// ---------- Contact form ----------
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String?
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}

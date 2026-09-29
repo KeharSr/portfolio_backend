@@ -1,0 +1,16 @@
+module.exports = {
+  userRepository: require('./user.repository'),
+  profileRepository: require('./profile.repository'),
+  siteSettingRepository: require('./siteSetting.repository'),
+  socialLinkRepository: require('./socialLink.repository'),
+  skillRepository: require('./skill.repository'),
+  experienceRepository: require('./experience.repository'),
+  educationRepository: require('./education.repository'),
+  projectRepository: require('./project.repository'),
+  certificationRepository: require('./certification.repository'),
+  serviceRepository: require('./service.repository'),
+  testimonialRepository: require('./testimonial.repository'),
+  sectionRepository: require('./section.repository'),
+  sectionItemRepository: require('./sectionItem.repository'),
+  contactMessageRepository: require('./contactMessage.repository'),
+};
