@@ -30,5 +30,6 @@ router.use(
 );
 router.use('/sections', require('./section.routes'));
 router.use('/messages', require('./contactMessage.routes'));
+router.use('/media', require('./media.routes'));
 
 module.exports = router;

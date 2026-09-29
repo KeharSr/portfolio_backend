@@ -56,13 +56,13 @@ const settings = {
   bulk: z.record(z.string().min(1).max(100), z.any()).refine((o) => Object.keys(o).length > 0, 'Body cannot be empty'),
 };
 
-const socialLink = crudSchemas({ platform: str(100), url: str(2048), icon: optStr(), order: order(), isVisible: isVisible() });
+const socialLink = crudSchemas({ platform: str(100), url: str(2048), icon: optStr(2048), order: order(), isVisible: isVisible() });
 
 const skill = crudSchemas({
   name: str(),
   category: optStr(),
   level: z.number().int().min(0).max(100).nullable().optional(),
-  icon: optStr(),
+  icon: optStr(2048),
   order: order(),
   isVisible: isVisible(),
 });
@@ -129,7 +129,14 @@ const certification = crudSchemas({
   isVisible: isVisible(),
 });
 
-const service = crudSchemas({ title: str(), description: optText(), icon: optStr(), order: order(), isVisible: isVisible() });
+const service = crudSchemas({
+  title: str(),
+  description: optText(),
+  icon: optStr(2048),
+  imageUrl: optUrl(),
+  order: order(),
+  isVisible: isVisible(),
+});
 
 const testimonial = crudSchemas({
   name: str(),
@@ -147,6 +154,8 @@ const section = crudSchemas({
   slug: optStr(),
   subtitle: optStr(500),
   content: optText(),
+  icon: optStr(2048),
+  imageUrl: optUrl(),
   type: optStr(50).transform((v) => v ?? undefined),
   data: json(),
   order: order(),
@@ -159,13 +168,27 @@ const sectionItem = crudSchemas({
   description: optText(),
   imageUrl: optUrl(),
   link: optUrl(),
-  icon: optStr(),
+  icon: optStr(2048),
   date: optDate(),
   tags: strArray(),
   data: json(),
   order: order(),
   isVisible: isVisible(),
 });
+
+const folder = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .regex(/^[a-z0-9-]{1,40}$/, 'folder may only contain letters, numbers and dashes')
+  .optional();
+
+const media = {
+  // multipart text fields sent alongside the file(s)
+  upload: z.object({ folder, alt: optStr(500) }),
+  update: z.object({ alt: optStr(500) }).strict(),
+  query: z.object({ folder, type: z.enum(['image', 'document']).optional() }),
+};
 
 const contactMessage = {
   create: z
@@ -194,4 +217,5 @@ module.exports = {
   section,
   sectionItem,
   contactMessage,
+  media,
 };

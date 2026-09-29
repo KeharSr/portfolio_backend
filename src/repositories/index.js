@@ -13,4 +13,5 @@ module.exports = {
   sectionRepository: require('./section.repository'),
   sectionItemRepository: require('./sectionItem.repository'),
   contactMessageRepository: require('./contactMessage.repository'),
+  mediaRepository: require('./media.repository'),
 };
