@@ -8,4 +8,5 @@ module.exports = {
   sectionItemService: require('./sectionItem.service'),
   contactMessageService: require('./contactMessage.service'),
   portfolioService: require('./portfolio.service'),
+  mediaService: require('./media.service'),
 };

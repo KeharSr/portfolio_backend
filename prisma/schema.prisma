@@ -173,6 +173,7 @@ model Service {
   title       String
   description String?  @db.Text
   icon        String?
+  imageUrl    String?
   order       Int      @default(0)
   isVisible   Boolean  @default(true)
   createdAt   DateTime @default(now())
@@ -206,6 +207,8 @@ model Section {
   title     String
   subtitle  String?
   content   String?       @db.Text
+  icon      String?
+  imageUrl  String?
   type      String        @default("list") // free-form hint for the frontend: text | list | grid | timeline ...
   data      Json?
   order     Int           @default(0)
@@ -251,4 +254,23 @@ model ContactMessage {
   createdAt DateTime @default(now())
 
   @@map("contact_messages")
+}
+
+// ---------- Uploaded files (images, icons, avatars, resume) ----------
+
+model Media {
+  id           String   @id @default(uuid())
+  key          String   @unique // storage key, e.g. "avatars/5f1c...e2.png"
+  folder       String   @default("general")
+  originalName String
+  mimeType     String
+  size         Int
+  width        Int?
+  height       Int?
+  alt          String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([folder])
+  @@map("media")
 }

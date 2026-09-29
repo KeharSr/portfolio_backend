@@ -7,6 +7,8 @@ for (const key of required) {
   }
 }
 
+const path = require('path');
+
 module.exports = {
   nodeEnv: process.env.NODE_ENV || 'development',
   port: Number(process.env.PORT) || 5000,
@@ -16,4 +18,10 @@ module.exports = {
     ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
     : '*',
   allowRegistration: process.env.ALLOW_REGISTRATION === 'true',
+  // Public base URL of this API, used to build absolute file URLs (e.g. https://api.example.com).
+  // When empty, the URL is derived from the incoming request.
+  publicUrl: (process.env.PUBLIC_URL || '').replace(/\/+$/, ''),
+  uploadDir: path.resolve(process.env.UPLOAD_DIR || 'uploads'),
+  maxUploadBytes: (Number(process.env.MAX_UPLOAD_MB) || 5) * 1024 * 1024,
+  trustProxy: process.env.TRUST_PROXY === 'true',
 };
