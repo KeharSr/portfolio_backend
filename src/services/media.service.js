@@ -16,10 +16,11 @@ const readDimensions = (buffer, ext) => {
 };
 
 class MediaService {
-  // Adds `path` (relative) and `url` (absolute) so the frontend can use the file directly.
+  // Adds `path` and `url` (absolute) so the frontend can use the file directly.
+  // Cloud storage already returns an absolute URL, so baseUrl is only prepended to relative paths.
   toDto(media, baseUrl) {
     const path = storage.publicPath(media.key);
-    return { ...media, path, url: `${baseUrl}${path}` };
+    return { ...media, path, url: /^https?:\/\//.test(path) ? path : `${baseUrl}${path}` };
   }
 
   // Checks every file before saving any, so one bad file rejects the whole upload.

@@ -23,5 +23,8 @@ module.exports = {
   publicUrl: (process.env.PUBLIC_URL || '').replace(/\/+$/, ''),
   uploadDir: path.resolve(process.env.UPLOAD_DIR || 'uploads'),
   maxUploadBytes: (Number(process.env.MAX_UPLOAD_MB) || 5) * 1024 * 1024,
+  // When set, uploads go to Cloudinary instead of UPLOAD_DIR.
+  cloudinaryUrl: process.env.CLOUDINARY_URL || '',
+  cloudinaryFolder: process.env.CLOUDINARY_FOLDER || 'portfolio',
   trustProxy: process.env.TRUST_PROXY === 'true',
 };

@@ -138,7 +138,7 @@ const { data } = await res.json(); // data.url → use as imageUrl
   `icon` fields accept either an uploaded file URL or an icon-library name such as `"FaGithub"`. The frontend decides which one it is, for example by checking whether the value starts with `http` or `/`.
 - **Absolute URLs:** set `PUBLIC_URL` (e.g. `https://api.example.com`) in production so URLs use your real domain. Behind a proxy, also set `TRUST_PROXY=true`.
 - **Deleting** a media record also deletes the file. Records that still point at its URL are not changed.
-- **Hosting:** files are saved to local disk (`UPLOAD_DIR`). On hosts with temporary disks, such as Render's free tier or Heroku, use a persistent volume. Otherwise replace `src/storage/local.storage.js` with an S3 or Cloudinary module that has the same `save` / `remove` / `publicPath` functions.
+- **Hosting:** by default files are saved to local disk (`UPLOAD_DIR`). On hosts with temporary disks, such as Render's free tier or Heroku, set `CLOUDINARY_URL` so files go to Cloudinary instead and `url` is a permanent `https://res.cloudinary.com/...` link. Set the same `CLOUDINARY_URL` locally too, so images uploaded from your machine also work on the live site.
 
 ## Responses
 
