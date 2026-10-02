@@ -2,16 +2,10 @@ const path = require('path');
 const { v2: cloudinary } = require('cloudinary');
 const { cloudinaryUrl, cloudinaryFolder } = require('../config/env');
 
-/**
- * Stores files on Cloudinary, so they survive redeploys and work from any host.
- * Enabled when CLOUDINARY_URL is set (see storage/index.js).
- * Same save/remove/publicPath interface as local.storage.js, but publicPath
- * returns an absolute https URL.
- */
+
 cloudinary.config({ cloudinary_url: cloudinaryUrl, secure: true, urlAnalytics: false });
 
-// Cloudinary serves PDFs as "raw" files (images-only accounts block PDF delivery);
-// everything else is an image whose public id is the key without its extension.
+
 const target = (key) => {
   const ext = path.extname(key).slice(1);
   const base = `${cloudinaryFolder}/${key}`;
